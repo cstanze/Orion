@@ -10,10 +10,10 @@ import Foundation
 struct OrionHistoryEntry: Codable {
   /// Title of site accessed
   var title: String
-  
+
   /// Url of site accessed
   var url: String
-  
+
   /// Date and Time of access
   var dt: String
 }
@@ -26,12 +26,12 @@ class OrionHistoryManager {
     dateFormatter.dateStyle = .medium
     dateFormatter.timeStyle = .medium
     let now = dateFormatter.string(from: Date.now)
-    
+
     /// Theres definitely a better way to do this but it works.
     let entry = OrionHistoryEntry(title: title, url: url.absoluteString, dt: now)
     var currentConfig: [OrionHistoryEntry]? = OrionConfig.getFromConfig(named: "history")
     guard currentConfig != nil else { return }
-    
+
     currentConfig!.append(entry)
     OrionConfig.writeToConfig(named: "history", data: currentConfig!)
   }

@@ -20,7 +20,7 @@ class OrionConfig {
         if convertFromSnakeCase {
           jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         }
-        
+
         return try jsonDecoder.decode(D.self, from: jsonData)
       } catch {
         print("Error occurred retrieving config: \(error)")
@@ -28,7 +28,7 @@ class OrionConfig {
       }
     }
   }
-  
+
   /// Writes arbitrary JSON
   static func writeJSON<E: Encodable>(withUrl url: URL, data: E, convertToSnakeCase: Bool) {
     let jsonEncoder = JSONEncoder()
@@ -48,7 +48,7 @@ class OrionConfig {
       print("Error occurred saving config: \(error)")
     }
   }
-  
+
   /// Inserts any encodable object into a JSON config file.
   static func writeToConfig<E: Encodable>(named name: String, data: E) {
     let jsonEncoder = JSONEncoder()
@@ -70,7 +70,7 @@ class OrionConfig {
       print("Error occurred saving config: \(error)")
     }
   }
-  
+
   /// Gets the contents of a JSON config file and decodes it
   static func getFromConfig<D: Decodable>(named name: String) -> D? {
     let configPath = FileManager.default.applicationSupportUrl!.appendingPathComponent("\(name).json")
@@ -81,7 +81,7 @@ class OrionConfig {
       do {
         let jsonData = try Data(contentsOf: configPath)
         let jsonDecoder = JSONDecoder()
-        
+
         return try jsonDecoder.decode(D.self, from: jsonData)
       } catch {
         print("Error occurred retrieving config: \(error)")

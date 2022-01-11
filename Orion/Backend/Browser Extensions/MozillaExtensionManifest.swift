@@ -22,13 +22,13 @@ struct MozExtManifest: Codable {
   var optionsUi: OptionsUI
   var permissions: [String]
   var version: String
-  
+
   init(_ path: URL) throws {
     let fm = FileManager.default
     guard fm.fileExists(atPath: path.path) else {
       throw MozManifestError.missing
     }
-    
+
     let jd = JSONDecoder()
     jd.keyDecodingStrategy = .convertFromSnakeCase
     do {
@@ -38,14 +38,14 @@ struct MozExtManifest: Codable {
       throw MozManifestError.malformed
     }
   }
-  
+
   func extensionIcon() -> NSImage? {
     guard !self.icons.keys.isEmpty else { return nil }
-    
+
     var imageUrl = FileManager.default.extensionDirectory!.appendingPathComponent(self.name)
     /// This should give us the highest resolution
     imageUrl.appendPathComponent(self.icons[self.icons.keys.sorted().last!]!)
-    
+
     return NSImage(contentsOf: imageUrl)
   }
 }

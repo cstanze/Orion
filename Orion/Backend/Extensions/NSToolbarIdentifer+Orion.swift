@@ -12,7 +12,7 @@ extension NSToolbarItem.Identifier {
   static let addTabButtonItemIdentifier = NSToolbarItem.Identifier("OrionAddTabButtonItem")
   static let reloadItemIdentifier = NSToolbarItem.Identifier("OrionReloadItem")
   static let tabCollectionItemIdentifier = NSToolbarItem.Identifier("OrionTabCollectionItem")
-  
+
   static let navigationItemIdentifier = NSToolbarItem.Identifier("OrionNavigationItem")
   static let navigationBackwardItemIdentifier = NSToolbarItem.Identifier("OrionNavigationBackwardItem")
   static let navigationForwardItemIdentifier = NSToolbarItem.Identifier("OrionNavigationForwardItem")

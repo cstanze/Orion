@@ -9,17 +9,26 @@ import Foundation
 import WebKit
 
 extension OrionViewController: WKUIDelegate {
-  func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+  func webView(
+    _ webView: WKWebView,
+    runJavaScriptAlertPanelWithMessage message: String,
+    initiatedByFrame frame: WKFrameInfo,
+    completionHandler: @escaping () -> Void
+  ) {
     let alert = NSAlert()
     alert.messageText = message
     alert.alertStyle = .informational
     alert.addButton(withTitle: "Close")
-    alert.beginSheetModal(for: view.window!) { response in
+    alert.beginSheetModal(for: view.window!) { _ in
       completionHandler()
     }
   }
-  
-  func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+
+  func webView(
+    _ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String,
+    initiatedByFrame frame: WKFrameInfo,
+    completionHandler: @escaping (Bool) -> Void
+  ) {
     let alert = NSAlert()
     alert.messageText = message
     alert.alertStyle = .informational
@@ -29,8 +38,14 @@ extension OrionViewController: WKUIDelegate {
       completionHandler(response == .alertFirstButtonReturn)
     }
   }
-  
-  func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+
+  func webView(
+    _ webView: WKWebView,
+    runJavaScriptTextInputPanelWithPrompt prompt: String,
+    defaultText: String?,
+    initiatedByFrame frame: WKFrameInfo,
+    completionHandler: @escaping (String?) -> Void
+  ) {
     let alert = NSAlert()
     alert.messageText = prompt
     alert.alertStyle = .informational
@@ -42,12 +57,17 @@ extension OrionViewController: WKUIDelegate {
       if response == .alertFirstButtonReturn {
         completionHandler(inputTextField.stringValue)
       } else {
-        completionHandler("")
+        completionHandler(defaultText ?? "")
       }
     }
   }
-  
-  func webView(_ webView: WKWebView, runOpenPanelWith parameters: WKOpenPanelParameters, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping ([URL]?) -> Void) {
+
+  func webView(
+    _ webView: WKWebView,
+    runOpenPanelWith parameters: WKOpenPanelParameters,
+    initiatedByFrame frame: WKFrameInfo,
+    completionHandler: @escaping ([URL]?) -> Void
+  ) {
     let openPanel = NSOpenPanel()
     openPanel.allowsMultipleSelection = parameters.allowsMultipleSelection
     if #available(macOS 10.13.4, *) {

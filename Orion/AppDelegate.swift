@@ -8,39 +8,39 @@
 import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-  
+
   private var windowControllers: [OrionWindowController] = []
   var extensionManager = OrionExtensionManager()
   var affinityManager = OrionSiteAffinityManager()
 
   func applicationDidFinishLaunching(_ finishLaunching: Notification) {
-    /// How would this even trigger? Who knows. It's possible though. -_-
+    // How would this even trigger? Who knows. It's possible though. -_-
     guard FileManager.default.applicationSupportUrl != nil else {
-      let window = NSWindow(contentRect: NSMakeRect(0, 0, 1076, 678),
+      let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1076, height: 678),
                                   styleMask: [.miniaturizable, .closable, .resizable, .titled],
                                   backing: .buffered,
                                   defer: false)
       window.makeKeyAndOrderFront(nil)
-      
+
       let failedAlert = NSAlert()
       failedAlert.messageText = "Failed to create Application Support folder."
       failedAlert.informativeText = "Check for any errors or contact support. Otherwise, please try again."
       failedAlert.addButton(withTitle: "Ok")
       failedAlert.runModal()
-      
+
       NSApp.terminate(nil)
       return
     }
     print("Found Application Support: \(FileManager.default.applicationSupportUrl!.path)")
     _ = self.newWindow()
   }
-  
+
   @objc func reloadCurrent() {
     if let windowController = NSApp.keyWindow?.windowController as? OrionWindowController {
       windowController.mainViewController.currentWebView?.reload()
     }
   }
-  
+
   @objc func stopReloadingCurrent() {
     if let windowController = NSApp.keyWindow?.windowController as? OrionWindowController {
       if let currentWebView = windowController.mainViewController.currentWebView {
@@ -50,15 +50,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
     }
   }
-  
+
   @objc func newWindow() -> OrionWindowController {
     let newController = OrionWindowController()
     windowControllers.append(newController)
     newController.showWindow(self)
-    
+
     return newController
   }
-  
+
   @objc func closeCurrentWindow() {
     NSApplication.shared.keyWindow?.close()
   }
@@ -71,4 +71,3 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     return true
   }
 }
-

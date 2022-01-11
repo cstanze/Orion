@@ -8,9 +8,13 @@
 import WebKit
 
 extension WKUserScript {
-    
+
   convenience init(name: String) {
-    self.init(source: WKUserScript.ensureInternalResource(withName: name), injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+    self.init(
+      source: WKUserScript.ensureInternalResource(withName: name),
+      injectionTime: .atDocumentEnd,
+      forMainFrameOnly: true
+    )
   }
 
   static func ensureInternalResource(withName name: String) -> String {
@@ -20,7 +24,7 @@ extension WKUserScript {
     }
     return sourceCode!
   }
-    
+
   static func loadJavascript(withName name: String) -> String? {
     if let path = Bundle.main.path(forResource: name, ofType: "js") {
       print(path)
