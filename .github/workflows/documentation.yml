@@ -19,13 +19,11 @@ jobs:
       - name: Commit Documentation
         run: |
           sudo chown -R $USER:$USER ./Documentation
-          ls -l Documentation
-          id
-          whoami
           git config --global user.name 'cstanze'
           git config --global user.email 'cstanze@users.noreply.github.com'
-          git add -A
+          git add ./Documentation/* 
           git commit -m "[Automated] Documentation CI"
+          git branch -M gh-pages
           git push
       # - name: Upload Documentation to Wiki
       #  uses: SwiftDocOrg/github-wiki-publish-action@v1
