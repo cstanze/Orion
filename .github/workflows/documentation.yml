@@ -16,20 +16,21 @@ jobs:
           output: Documentation
           minimum-access-level: private
           format: "html"
-      - name: Fix Documentation permissions
-        run: sudo chown -R $USER:$USER Documentation/
+      - name: Upload Documentation Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Documentation
+          path: Documentation/
+      - name: Fix Generated Documentation
+        run: |
+          sudo chown -R $USER:$USER Documentation/
+          find . -name '*.html' -type f -exec sed -i'' -e 's/\.\/all\.css/\/all\.css/g' {} \;
       - name: Commit Documentation
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           publish_dir: Documentation/
-      - name: Upload Documentation Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Documentation
-          path: Documentation/
-
       # - name: Commit Documentation
       #  run: |
       #    sudo chown -R $USER:$USER ./Documentation
