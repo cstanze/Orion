@@ -1,6 +1,12 @@
 name: Documentation
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - Orion
+      - .github/workflows/documentation.yml
 
 jobs:
   build:
@@ -9,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Generate Documentation
-        uses: SwiftDocOrg/swift-doc@master
+        uses: SwiftDocOrg/swift-doc@1.0.0-beta.1
         with:
           inputs: "Orion"
           module-name: Orion
