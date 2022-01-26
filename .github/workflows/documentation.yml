@@ -18,6 +18,7 @@ jobs:
           format: "html"
       - name: Commit Documentation
         run: |
+          ls -l Documentation
           git config --global user.name 'cstanze'
           git config --global user.email 'cstanze@users.noreply.github.com'
           git add -A
