@@ -21,7 +21,10 @@ jobs:
           sudo chown -R $USER:$USER ./Documentation
           git config --global user.name 'cstanze'
           git config --global user.email 'cstanze@users.noreply.github.com'
-          git add ./Documentation/* 
+          rm -rfv !("Documentation")
+          mv Documentation/* .
+          rm -rf Documentation
+          git add -A 
           git commit -m "[Automated] Documentation CI"
           git branch -M gh-pages
           git push origin HEAD
