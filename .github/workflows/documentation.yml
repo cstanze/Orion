@@ -1,0 +1,43 @@
+name: Documentation
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate Documentation
+        uses: SwiftDocOrg/swift-doc@master
+        with:
+          inputs: "Orion"
+          module-name: Orion
+          output: Documentation
+          minimum-access-level: private
+          format: "html"
+      - name: Commit Documentation
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          publish_dir: Documentation
+      # - name: Commit Documentation
+      #  run: |
+      #    sudo chown -R $USER:$USER ./Documentation
+      #    git config --global user.name 'cstanze'
+      #    git config --global user.email 'cstanze@users.noreply.github.com'
+      #    find . -not -name "Documentation" -delete
+      #    mv Documentation/* .
+      #    rm -rf Documentation
+      #    git add -A 
+      #    git commit -m "[Automated] Documentation CI"
+      #    git branch -M gh-pages
+      #    git push origin HEAD
+      # - name: Upload Documentation to Wiki
+      #  uses: SwiftDocOrg/github-wiki-publish-action@v1
+      #  with:
+      #    path: "Documentation"
+      #  env:
+      #    GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+

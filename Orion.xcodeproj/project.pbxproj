@@ -1,0 +1,547 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		40551E93279395D2006612B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40551E92279395D2006612B2 /* AppDelegate.swift */; };
+		40551E95279395D2006612B2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40551E94279395D2006612B2 /* ViewController.swift */; };
+		40551E97279395DB006612B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40551E96279395DB006612B2 /* Assets.xcassets */; };
+		40551EA2279395FE006612B2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40551EA1279395FE006612B2 /* main.swift */; };
+		40551EB92793A032006612B2 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 40551EB82793A032006612B2 /* ZIPFoundation */; };
+		409381EC279F1335001D6395 /* OrionWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409381EB279F1335001D6395 /* OrionWindowController.swift */; };
+		409381EE279F1367001D6395 /* OrionWindowResizeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409381ED279F1367001D6395 /* OrionWindowResizeObserver.swift */; };
+		409381F2279F1454001D6395 /* NSAlert+Fatal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409381F1279F1454001D6395 /* NSAlert+Fatal.swift */; };
+		409381FA279F16A8001D6395 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 409381F9279F16A8001D6395 /* main.m */; };
+		4093820027A0DBD4001D6395 /* OrionRelaunchHelper in Resources */ = {isa = PBXBuildFile; fileRef = 409381F7279F16A7001D6395 /* OrionRelaunchHelper */; };
+		4093820227A0DBFA001D6395 /* NSApplication+Relaunch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4093820127A0DBFA001D6395 /* NSApplication+Relaunch.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		409381FE27A0DBC7001D6395 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40551E87279395D2006612B2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 409381F6279F16A7001D6395;
+			remoteInfo = OrionRelaunchHelper;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		409381F5279F16A7001D6395 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		40551E8F279395D2006612B2 /* Orion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orion.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		40551E92279395D2006612B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		40551E94279395D2006612B2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		40551E96279395DB006612B2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		40551E9B279395DB006612B2 /* Orion.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Orion.entitlements; sourceTree = "<group>"; };
+		40551EA1279395FE006612B2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		40551EB527939D88006612B2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		409381EB279F1335001D6395 /* OrionWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrionWindowController.swift; sourceTree = "<group>"; };
+		409381ED279F1367001D6395 /* OrionWindowResizeObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrionWindowResizeObserver.swift; sourceTree = "<group>"; };
+		409381F1279F1454001D6395 /* NSAlert+Fatal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAlert+Fatal.swift"; sourceTree = "<group>"; };
+		409381F7279F16A7001D6395 /* OrionRelaunchHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OrionRelaunchHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		409381F9279F16A8001D6395 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4093820127A0DBFA001D6395 /* NSApplication+Relaunch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSApplication+Relaunch.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		40551E8C279395D2006612B2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40551EB92793A032006612B2 /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		409381F4279F16A7001D6395 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		40551E86279395D2006612B2 = {
+			isa = PBXGroup;
+			children = (
+				40551E91279395D2006612B2 /* Orion */,
+				409381F8279F16A8001D6395 /* OrionRelaunchHelper */,
+				40551E90279395D2006612B2 /* Products */,
+				40551EBA2793A04C006612B2 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		40551E90279395D2006612B2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				40551E8F279395D2006612B2 /* Orion.app */,
+				409381F7279F16A7001D6395 /* OrionRelaunchHelper */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		40551E91279395D2006612B2 /* Orion */ = {
+			isa = PBXGroup;
+			children = (
+				409381EF279F1443001D6395 /* Backend */,
+				409381E9279F1311001D6395 /* UI */,
+				40551EB427939C66006612B2 /* Resources */,
+				40551E92279395D2006612B2 /* AppDelegate.swift */,
+				40551E94279395D2006612B2 /* ViewController.swift */,
+				40551EA1279395FE006612B2 /* main.swift */,
+				40551E9B279395DB006612B2 /* Orion.entitlements */,
+				40551EB527939D88006612B2 /* Info.plist */,
+			);
+			path = Orion;
+			sourceTree = "<group>";
+		};
+		40551EB427939C66006612B2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				40551E96279395DB006612B2 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		40551EBA2793A04C006612B2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		409381E9279F1311001D6395 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				409381EA279F1316001D6395 /* Window Controller */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		409381EA279F1316001D6395 /* Window Controller */ = {
+			isa = PBXGroup;
+			children = (
+				409381EB279F1335001D6395 /* OrionWindowController.swift */,
+				409381ED279F1367001D6395 /* OrionWindowResizeObserver.swift */,
+			);
+			path = "Window Controller";
+			sourceTree = "<group>";
+		};
+		409381EF279F1443001D6395 /* Backend */ = {
+			isa = PBXGroup;
+			children = (
+				409381F0279F144D001D6395 /* Extensions */,
+			);
+			path = Backend;
+			sourceTree = "<group>";
+		};
+		409381F0279F144D001D6395 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				409381F1279F1454001D6395 /* NSAlert+Fatal.swift */,
+				4093820127A0DBFA001D6395 /* NSApplication+Relaunch.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		409381F8279F16A8001D6395 /* OrionRelaunchHelper */ = {
+			isa = PBXGroup;
+			children = (
+				409381F9279F16A8001D6395 /* main.m */,
+			);
+			path = OrionRelaunchHelper;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		40551E8E279395D2006612B2 /* Orion */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 40551E9E279395DB006612B2 /* Build configuration list for PBXNativeTarget "Orion" */;
+			buildPhases = (
+				40551E8B279395D2006612B2 /* Sources */,
+				40551E8C279395D2006612B2 /* Frameworks */,
+				40551E8D279395D2006612B2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				409381FF27A0DBC7001D6395 /* PBXTargetDependency */,
+			);
+			name = Orion;
+			packageProductDependencies = (
+				40551EB82793A032006612B2 /* ZIPFoundation */,
+			);
+			productName = Orion;
+			productReference = 40551E8F279395D2006612B2 /* Orion.app */;
+			productType = "com.apple.product-type.application";
+		};
+		409381F6279F16A7001D6395 /* OrionRelaunchHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 409381FB279F16A8001D6395 /* Build configuration list for PBXNativeTarget "OrionRelaunchHelper" */;
+			buildPhases = (
+				409381F3279F16A7001D6395 /* Sources */,
+				409381F4279F16A7001D6395 /* Frameworks */,
+				409381F5279F16A7001D6395 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OrionRelaunchHelper;
+			productName = OrionRelaunchHelper;
+			productReference = 409381F7279F16A7001D6395 /* OrionRelaunchHelper */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		40551E87279395D2006612B2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					40551E8E279395D2006612B2 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					409381F6279F16A7001D6395 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 40551E8A279395D2006612B2 /* Build configuration list for PBXProject "Orion" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 40551E86279395D2006612B2;
+			packageReferences = (
+				40551EB72793A032006612B2 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
+			productRefGroup = 40551E90279395D2006612B2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				40551E8E279395D2006612B2 /* Orion */,
+				409381F6279F16A7001D6395 /* OrionRelaunchHelper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		40551E8D279395D2006612B2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4093820027A0DBD4001D6395 /* OrionRelaunchHelper in Resources */,
+				40551E97279395DB006612B2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		40551E8B279395D2006612B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4093820227A0DBFA001D6395 /* NSApplication+Relaunch.swift in Sources */,
+				40551E95279395D2006612B2 /* ViewController.swift in Sources */,
+				409381F2279F1454001D6395 /* NSAlert+Fatal.swift in Sources */,
+				409381EC279F1335001D6395 /* OrionWindowController.swift in Sources */,
+				409381EE279F1367001D6395 /* OrionWindowResizeObserver.swift in Sources */,
+				40551E93279395D2006612B2 /* AppDelegate.swift in Sources */,
+				40551EA2279395FE006612B2 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		409381F3279F16A7001D6395 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				409381FA279F16A8001D6395 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		409381FF27A0DBC7001D6395 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 409381F6279F16A7001D6395 /* OrionRelaunchHelper */;
+			targetProxy = 409381FE27A0DBC7001D6395 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		40551E9C279395DB006612B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		40551E9D279395DB006612B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		40551E9F279395DB006612B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Orion/Orion.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S5RTSWCP3B;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Orion/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2022 Jules Amalie";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.constanze.Orion;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		40551EA0279395DB006612B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Orion/Orion.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S5RTSWCP3B;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Orion/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2022 Jules Amalie";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.constanze.Orion;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		409381FC279F16A8001D6395 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = S5RTSWCP3B;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		409381FD279F16A8001D6395 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = S5RTSWCP3B;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		40551E8A279395D2006612B2 /* Build configuration list for PBXProject "Orion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40551E9C279395DB006612B2 /* Debug */,
+				40551E9D279395DB006612B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		40551E9E279395DB006612B2 /* Build configuration list for PBXNativeTarget "Orion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40551E9F279395DB006612B2 /* Debug */,
+				40551EA0279395DB006612B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		409381FB279F16A8001D6395 /* Build configuration list for PBXNativeTarget "OrionRelaunchHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				409381FC279F16A8001D6395 /* Debug */,
+				409381FD279F16A8001D6395 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		40551EB72793A032006612B2 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.9;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		40551EB82793A032006612B2 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40551EB72793A032006612B2 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 40551E87279395D2006612B2 /* Project object */;
+}
