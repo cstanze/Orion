@@ -21,7 +21,7 @@ jobs:
         with:
           name: Documentation
           path: Documentation/
-      - name: Fix Generated Documentation
+      - name: Modify Generated Documentation
         run: |
           sudo chown -R $USER:$USER Documentation/
           find . -name '*.html' -type f -exec sed -i'' -e 's/\.\/all\.css/\/all\.css/g' {} \;
