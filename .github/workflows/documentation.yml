@@ -1,12 +1,6 @@
 name: Documentation
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - Orion
-      - .github/workflows/documentation.yml
+on: [push]
 
 jobs:
   build:
