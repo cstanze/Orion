@@ -18,6 +18,7 @@ jobs:
           format: "html"
       - name: Commit Documentation
         run: |
+          sudo chown -R $USER:$USER ./Documentation
           ls -l Documentation
           id
           whoami
