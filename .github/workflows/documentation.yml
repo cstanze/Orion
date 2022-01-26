@@ -19,6 +19,8 @@ jobs:
       - name: Commit Documentation
         run: |
           ls -l Documentation
+          id
+          whoami
           git config --global user.name 'cstanze'
           git config --global user.email 'cstanze@users.noreply.github.com'
           git add -A
