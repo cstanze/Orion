@@ -9,9 +9,12 @@ import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-  // Ideally, it would be best *not* to use mutable
-  // statics due to any data races (if any should occur)
-  // but I'm not too concerned about that right now.
+  /// Determines whether or not the AppDelegate should force
+  /// termination when ``AppDelegate/applicationShouldTerminate(_:)`` is executed
+  ///
+  /// Ideally, it would be best *not* to use mutable
+  /// statics due to any data races (if any should occur)
+  /// but I'm not too concerned about that right now.
   static var shouldForceTermination = false
   
   func applicationDidFinishLaunching(_ aNotification: Notification) {

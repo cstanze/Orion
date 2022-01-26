@@ -13,10 +13,12 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
+/// Simple KVO Wrapper Class
 @interface ORObserver : NSObject
 /// Simple callback for the observer
 @property void(^callback)(void);
 
+/// Initialises a new `ORObserver` with a block
 -(instancetype)initWithBlock:(void(^)(void))callback;
 @end
 
@@ -32,8 +34,9 @@
   return self;
 }
 
+/// Observes for changes, then removes itself from the observed object
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-  [((NSObject*)object) removeObserver:self forKeyPath:@"isTerminated"];
+  [((NSObject*)object) removeObserver:self forKeyPath:keyPath];
   self.callback();
 }
 
@@ -62,10 +65,12 @@ int main(int argc, const char * argv[]) {
     }
     
     NSURL *bundleUrl = runningApplication.bundleURL;
+    NSString *localisedName = runningApplication.localizedName;
+    int runningPid = runningApplication.processIdentifier;
     ORObserver *observer = [[ORObserver alloc] initWithBlock:^{
       CFRunLoopStop(CFRunLoopGetCurrent());
+      NSLog(@"Relaunching %@ (%d)", localisedName, runningPid);
     }];
-    NSString *localisedName = runningApplication.localizedName;
     [runningApplication addObserver:observer forKeyPath:@"isTerminated" options:0 context:nil];
     [runningApplication terminate];
     CFRunLoopRun();

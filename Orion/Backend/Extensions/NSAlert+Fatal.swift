@@ -9,6 +9,10 @@ import Foundation
 import AppKit
 
 extension NSAlert {
+  /// Shows some error text and (optionally) prompts the user for a relaunch
+  ///
+  /// - Important: this function is **not** intended to return as it initiates a relaunch
+  /// - SeeAlso: ``NSApp.relaunch(_:)``
   func fatalError(informativeText text: String, promptRestart: Bool) {
     let alert = NSAlert()
     alert.alertStyle = .critical
@@ -27,13 +31,13 @@ extension NSAlert {
     }
     
     let resp = alert.runModal()
+    AppDelegate.shouldForceTermination = true
     if promptRestart {
       if resp == .alertFirstButtonReturn {
-        
+        NSApp.relaunch(nil)
       }
     }
     
-    AppDelegate.shouldForceTermination = true
-//    NSApp.relaun
+    NSApp.terminate(nil)
   }
 }

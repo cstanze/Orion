@@ -16,7 +16,19 @@
 		409381EE279F1367001D6395 /* OrionWindowResizeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409381ED279F1367001D6395 /* OrionWindowResizeObserver.swift */; };
 		409381F2279F1454001D6395 /* NSAlert+Fatal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409381F1279F1454001D6395 /* NSAlert+Fatal.swift */; };
 		409381FA279F16A8001D6395 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 409381F9279F16A8001D6395 /* main.m */; };
+		4093820027A0DBD4001D6395 /* OrionRelaunchHelper in Resources */ = {isa = PBXBuildFile; fileRef = 409381F7279F16A7001D6395 /* OrionRelaunchHelper */; };
+		4093820227A0DBFA001D6395 /* NSApplication+Relaunch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4093820127A0DBFA001D6395 /* NSApplication+Relaunch.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		409381FE27A0DBC7001D6395 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40551E87279395D2006612B2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 409381F6279F16A7001D6395;
+			remoteInfo = OrionRelaunchHelper;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		409381F5279F16A7001D6395 /* CopyFiles */ = {
@@ -43,6 +55,7 @@
 		409381F1279F1454001D6395 /* NSAlert+Fatal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAlert+Fatal.swift"; sourceTree = "<group>"; };
 		409381F7279F16A7001D6395 /* OrionRelaunchHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OrionRelaunchHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		409381F9279F16A8001D6395 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4093820127A0DBFA001D6395 /* NSApplication+Relaunch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSApplication+Relaunch.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				409381F1279F1454001D6395 /* NSAlert+Fatal.swift */,
+				4093820127A0DBFA001D6395 /* NSApplication+Relaunch.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -168,6 +182,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				409381FF27A0DBC7001D6395 /* PBXTargetDependency */,
 			);
 			name = Orion;
 			packageProductDependencies = (
@@ -239,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4093820027A0DBD4001D6395 /* OrionRelaunchHelper in Resources */,
 				40551E97279395DB006612B2 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -250,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4093820227A0DBFA001D6395 /* NSApplication+Relaunch.swift in Sources */,
 				40551E95279395D2006612B2 /* ViewController.swift in Sources */,
 				409381F2279F1454001D6395 /* NSAlert+Fatal.swift in Sources */,
 				409381EC279F1335001D6395 /* OrionWindowController.swift in Sources */,
@@ -268,6 +285,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		409381FF27A0DBC7001D6395 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 409381F6279F16A7001D6395 /* OrionRelaunchHelper */;
+			targetProxy = 409381FE27A0DBC7001D6395 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		40551E9C279395DB006612B2 /* Debug */ = {

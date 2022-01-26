@@ -9,6 +9,7 @@ import Cocoa
 
 class OrionWindowController: NSWindowController, NSWindowDelegate {
 
+  /// A simple list of observers that wait for resize events on the current window.
   let resizeObservers: [OrionWindowResizeObserver] = []
   
   init() {
