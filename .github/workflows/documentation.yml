@@ -20,8 +20,8 @@ jobs:
         run: |
           git config --global user.name 'cstanze'
           git config --global user.email 'cstanze@users.noreply.github.com'
-          git add Documentation/
-          git commit -m "Automated Documentation CI"
+          git add -a
+          git commit -m "[Automated] Documentation CI"
           git push
       # - name: Upload Documentation to Wiki
       #  uses: SwiftDocOrg/github-wiki-publish-action@v1
