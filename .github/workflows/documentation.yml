@@ -24,7 +24,7 @@ jobs:
           git add ./Documentation/* 
           git commit -m "[Automated] Documentation CI"
           git branch -M gh-pages
-          git push
+          git push origin HEAD
       # - name: Upload Documentation to Wiki
       #  uses: SwiftDocOrg/github-wiki-publish-action@v1
       #  with:
