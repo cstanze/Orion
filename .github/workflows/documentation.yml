@@ -12,7 +12,7 @@ jobs:
         uses: SwiftDocOrg/swift-doc@master
         with:
           inputs: "Orion"
-          module-name: Orion Documentation
+          module-name: Orion
           output: Documentation
           minimum-access-level: private
           format: "html"
@@ -21,7 +21,7 @@ jobs:
           sudo chown -R $USER:$USER ./Documentation
           git config --global user.name 'cstanze'
           git config --global user.email 'cstanze@users.noreply.github.com'
-          rm -rfv !("Documentation")
+          find . -not -name "Documentation" -delete
           mv Documentation/* .
           rm -rf Documentation
           git add -A 
