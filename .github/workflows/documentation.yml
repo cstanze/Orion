@@ -16,17 +16,12 @@ jobs:
           output: Documentation
           minimum-access-level: private
           format: "html"
-      - uses: EndBug/add-and-commit@v8 # You can change this to use a specific version.
-        with:
-          add: "Documentation"
-    
-          # Determines the way the action fills missing author name and email. Three options are available:
-          # - github_actor -> UserName <UserName@users.noreply.github.com>
-          # - user_info -> Your Display Name <your-actual@email.com>
-          # - github_actions -> github-actions <email associated with the github logo>
-          default_author: github_actions
-          message: 'Add documentation from SwiftDoc'
-          push: true 
+      - name: Commit Documentation
+        run: |
+          git config --global user.name 'cstanze'
+          git config --global user.email 'cstanze@users.noreply.github.com'
+          git commit -am "Automated Documentation CI"
+          git push
       # - name: Upload Documentation to Wiki
       #  uses: SwiftDocOrg/github-wiki-publish-action@v1
       #  with:
