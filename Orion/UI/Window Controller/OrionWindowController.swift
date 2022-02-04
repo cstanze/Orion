@@ -12,8 +12,11 @@ class OrionWindowController: NSWindowController, NSToolbarItemValidation {
   var tabCollectionController: OrionTabCollectionController!
   var mainViewController: OrionViewController!
 
-  var backNavigationControl: NSButton?
-  var forwardNavigationControl: NSButton?
+  var segmentedNavigationControl: NSSegmentedControl!
+
+  var titleObserver: NSKeyValueObservation!
+  var backObserver: NSKeyValueObservation!
+  var forwardObserver: NSKeyValueObservation!
 
   var resizeObservers: [OrionWindowResizeObserver] = []
 
@@ -29,10 +32,6 @@ class OrionWindowController: NSWindowController, NSToolbarItemValidation {
     // MARK: - Controller Setup
     self.tabCollectionController = OrionTabCollectionController()
     self.mainViewController = OrionViewController()
-
-//    tabCollectionController.loadView()
-//    (tabCollectionController.view as! OrionViewResizable).beforeLoadWindow = self.window
-//    self.resizeObservers.append(tabCollectionController.view as! OrionWindowResizeObserver)
   }
 
   required init?(coder: NSCoder) {
@@ -53,15 +52,12 @@ class OrionWindowController: NSWindowController, NSToolbarItemValidation {
       // MARK: - Toolbar
       let toolbar = NSToolbar(identifier: NSToolbar.Identifier.windowToolbarIdentifier)
       toolbar.delegate = self
-      delegate.extensionManager.loadAllExtensionData()
-//      print("Passed extension data load stage")
       toolbar.allowsUserCustomization = true
       // TODO: fix weird double extension button bug
 //      toolbar.autosavesConfiguration = true
       toolbar.displayMode = .iconOnly
 
       window.titleVisibility = .hidden
-      //  window.titlebarAppearsTransparent = true
 
       // toolbar.showsBaselineSeparator = false
       /// `.unified` for macOS 10.13+ ?
@@ -70,8 +66,6 @@ class OrionWindowController: NSWindowController, NSToolbarItemValidation {
       }
 
       window.toolbar = toolbar
-      delegate.extensionManager.loadAllExtensions(toWindow: window)
-//      (tabCollectionController.view as! OrionViewResizable).windowWillResize(toSize: window.frame.size)
       window.toolbar?.validateVisibleItems()
 
       // MARK: - Visual Effects
@@ -84,12 +78,24 @@ class OrionWindowController: NSWindowController, NSToolbarItemValidation {
 
       window.contentView = mainViewController.view
       window.contentView?.wantsLayer = true
-      mainViewController?.currentWebView?.navigationDelegate = self
+      setupSegmentedNavigation()
+
+      backObserver = mainViewController.currentWebView!.observeForChanges(\.canGoBack) { [unowned self] in
+        segmentedNavigationControl.setEnabled(mainViewController.currentWebView!.canGoBack, forSegment: 0)
+      }
+      forwardObserver = mainViewController.currentWebView!.observeForChanges(\.canGoForward) { [unowned self] in
+        segmentedNavigationControl.setEnabled(mainViewController.currentWebView!.canGoForward, forSegment: 1)
+      }
+      titleObserver = mainViewController.currentWebView!.observeForChanges(\.title) { [unowned self] in
+        self.window?.title = mainViewController.currentWebView!.title!
+      }
+
+      mainViewController.currentWebView!.navigationDelegate = self
 
       NotificationCenter.default.addObserver(
         self,
         selector: #selector(controllerWebViewDidChange),
-        name: NSNotification.Name.OrionControllerWebViewChanged,
+        name: NSNotification.Name.WebViewChanged,
         object: nil
       )
 
@@ -100,42 +106,51 @@ class OrionWindowController: NSWindowController, NSToolbarItemValidation {
     }
   }
 
+  // MARK: - Segmented Navigation Control
+
+  func setupSegmentedNavigation() {
+    segmentedNavigationControl = NSSegmentedControl(images: [
+      { () -> NSImage in
+        if #available(macOS 11, *) {
+          return NSImage(systemSymbolName: "chevron.left", accessibilityDescription: nil)!
+        } else {
+          return NSImage(named: NSImage.goBackTemplateName)!
+        }
+      }(),
+      { () -> NSImage in
+        if #available(macOS 11, *) {
+          return NSImage(systemSymbolName: "chevron.right", accessibilityDescription: nil)!
+        } else {
+          return NSImage(named: NSImage.goForwardTemplateName)!
+        }
+      }()
+    ], trackingMode: .momentary, target: self, action: #selector(navigate(_:)))
+
+    segmentedNavigationControl.segmentStyle = .separated
+    for segmentIndex in 0..<segmentedNavigationControl.segmentCount {
+      segmentedNavigationControl.setEnabled(false, forSegment: segmentIndex)
+    }
+  }
+
   // MARK: - Tab Switching Logic
 
   @objc func controllerWebViewDidChange() {
-    mainViewController?.currentWebView?.navigationDelegate = self
+    mainViewController.currentWebView?.navigationDelegate = self
   }
 
   // MARK: - Toolbar Validation
 
   func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
-//    print("Validating toolbar item: \(item.itemIdentifier)")
     switch item.itemIdentifier {
     case .navigationItemIdentifier:
-      if let navigationStack = item.view as? NSStackView {
-        if let currentWebView = mainViewController.currentWebView {
-          /// Yes, it's not the best practice, but it works for my purposes
-          /// since I know the values will never change.
-
-          if !currentWebView.canGoBack {
-            navigationStack.subviews[0].removeFromSuperview()
-          } else {
-            navigationStack.insertArrangedSubview(backNavigationControl!, at: 0)
-          }
-
-          if !currentWebView.canGoForward {
-            navigationStack.subviews[1].removeFromSuperview()
-          } else {
-            navigationStack.insertArrangedSubview(forwardNavigationControl!, at: 1)
-          }
-
-          return true
-        }
+      if let currentWebView = mainViewController.currentWebView {
+        // Yes, it's not the best practice, but it works for my purposes
+        // since I know the values will never change.
+        segmentedNavigationControl.setEnabled(currentWebView.canGoBack, forSegment: 0)
+        segmentedNavigationControl.setEnabled(currentWebView.canGoForward, forSegment: 1)
       }
 
-      /// Only if we failed to get all the resources
-      /// required for validation
-      return false
+      return true
     default: return true
     }
   }
@@ -145,7 +160,7 @@ class OrionWindowController: NSWindowController, NSToolbarItemValidation {
   @objc func dummy() {}
 
   @objc func newTab(_ sender: NSToolbarItem) {
-//    NotificationCenter.default.post(name: <#T##NSNotification.Name#>, object: <#T##Any?#>)
+//    NotificationCenter.default.post(name: .NewTabCreated, object: nil)
   }
 
   /// Updates the navigator item
@@ -154,13 +169,15 @@ class OrionWindowController: NSWindowController, NSToolbarItemValidation {
   ///
   /// It uses `WKWebView.canGoBack` and `WKWebView.canGoForward` to determine
   /// when to hide/show the items.
-
-  @objc func navigate(_ sender: NSButton) {
+  @objc func navigate(_ sender: NSSegmentedControl) {
     if let currentWebView = mainViewController.currentWebView {
-      if sender == backNavigationControl {
+      switch sender.selectedSegment {
+      case 0:
         currentWebView.goBack()
-      } else {
+      case 1:
         currentWebView.goForward()
+      default:
+        preconditionFailure()
       }
     }
 

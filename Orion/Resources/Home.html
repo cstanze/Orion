@@ -1,6 +1,8 @@
+<!-- LOCALIZERS: Each localizable piece of the page is marked with a comment -->
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- LOCALIZERS: You might want to change the font family. You can also add styles to override sizes, etc. -->
     <style>
         body {
             background: rgb(246, 246, 246);
@@ -13,16 +15,83 @@
             -webkit-user-select: none;
         }
 
+        a {
+            color: rgb(21, 126, 251);
+            text-decoration: none;
+        }
+
+        input {
+            font-size: 16px;
+        }
+
+        .content-container {
+            min-width: 320px;
+            max-width: 580px;
+            margin: 0 auto;
+            position: relative;
+            width: 80%;
+        }
+
+        .main-title {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 34px;
+            margin: 0 auto;
+        }
+
+        .error-message {
+            font-size: 13px;
+            line-height: 18px;
+            padding: 0px 24px;
+        }
+
+        .text-container {
+            color: rgb(133, 133, 133);
+            position: relative;
+            width: 100%;
+            word-wrap: break-word;
+            -webkit-transition: all 0.3s;
+        }
+    
+        ._hidden {
+            display: none;
+        }
+      
+        ._opacity0 {
+          opacity: 0;
+          -webkit-transition: all 0.3s;
+        }
+
         @media (prefers-color-scheme: dark) {
             body {
                 background: rgb(28, 28, 30);
             }
+            a {
+                color: rgb(21, 126, 251);
+                text-decoration: none;
+            }
+            .text-container {
+                color: rgb(133, 133, 133);
+            }
         }
     </style>
+    <!-- LOCALIZERS: The next line contains the page title that appears in the window's title bar -->
     <title></title>
 </head>
 
 <body>
+    <div class="content-container">
+        <div class="error-container">
+            <div class="text-container">
+                <!-- Main title -->
+                <p class="main-title">Welcome to Orion</p>
+            </div>
+        </div>
+    </div>
 </body>
+<script>
+  setTimeout(() => {
+    document.querySelector('.main-title').classList.add("_opacity0")
+  }, 3000)
+</script>
 </html>
-

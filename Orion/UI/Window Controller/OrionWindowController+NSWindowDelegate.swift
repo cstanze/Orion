@@ -14,7 +14,7 @@ extension OrionWindowController: NSWindowDelegate {
     // since WebKit doesn't detect any of that.
     // YouTube, SoundCloud, other media platforms will keep
     // playing media if this line wasn't here.
-    mainViewController?.currentWebView?.loadHTMLString("", baseURL: nil)
+    mainViewController.currentWebView?.loadHTMLString("", baseURL: nil)
 
     return true
   }

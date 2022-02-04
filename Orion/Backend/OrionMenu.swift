@@ -50,7 +50,7 @@ class OrionMenu: NSMenu {
       NSMenuItem.separator(),
       NSMenuItem(
         title: "Close Window",
-        action: #selector((NSApplication.shared.delegate! as? AppDelegate)!.newWindow),
+        action: #selector((NSApplication.shared.delegate! as? AppDelegate)!.closeCurrentWindow),
         keyEquivalent: "W"
       )
     ]

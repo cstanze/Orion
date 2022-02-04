@@ -7,14 +7,14 @@
 
 import Cocoa
 
-class ExtensionToolbarItem: NSToolbarItem {
+class ExtensionToolbarItem: OrionToolbarItem {
   var extensionManifest: MozExtManifest!
 
   override init(itemIdentifier: NSToolbarItem.Identifier) {
     super.init(itemIdentifier: itemIdentifier)
 
     let extName = itemIdentifier.rawValue.replacingOccurrences(of: "OrionExtension_", with: "")
-    extensionManifest = (NSApp.delegate as? AppDelegate)!.extensionManager.extensionManifests[extName]!
+    extensionManifest = OrionExtensionManager.shared.extensionManifests[extName]!
 
     let icon = extensionManifest.extensionIcon()
     let itemView = NSButton(

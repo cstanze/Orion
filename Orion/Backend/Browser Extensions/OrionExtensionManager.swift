@@ -9,6 +9,8 @@ import AppKit
 import ZIPFoundation
 
 class OrionExtensionManager {
+  static let shared = OrionExtensionManager()
+
   let extensionDirectory = FileManager.default.applicationSupportUrl!
   var extensionManifests: [String: MozExtManifest] = [:]
   var loadedExtensions: [String] = []

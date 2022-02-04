@@ -45,6 +45,7 @@ struct MozExtManifest: Codable {
     var imageUrl = FileManager.default.extensionDirectory!.appendingPathComponent(self.name)
     /// This should give us the highest resolution
     imageUrl.appendPathComponent(self.icons[self.icons.keys.sorted().last!]!)
+    print(self.icons.keys.sorted().last!)
 
     return NSImage(contentsOf: imageUrl)
   }

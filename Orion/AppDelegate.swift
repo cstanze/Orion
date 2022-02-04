@@ -10,8 +10,6 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
   private var windowControllers: [OrionWindowController] = []
-  var extensionManager = OrionExtensionManager()
-  var affinityManager = OrionSiteAffinityManager()
 
   func applicationDidFinishLaunching(_ finishLaunching: Notification) {
     // How would this even trigger? Who knows. It's possible though. -_-

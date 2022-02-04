@@ -14,19 +14,31 @@ private enum TabButtonWidth {
   /// The raw value (but allows for growth using the tab size equation)
   case growing(CGFloat, CGFloat)
 
-  func calculated(backingFrame: NSRect, _ single: Bool = false) -> CGFloat {
-    let calculatedWidth: CGFloat
+  /**
+   * Here are some equations:
+   *
+   * `0.5 * backingWidth - (tabCount - 1) * 80`
+   * `(backingWidth) + (minimumWidth * tabCount)`
+   */
+  func calculated(backingFrame: NSRect, _ tabCount: Int = 1, _ focused: Bool = false) -> CGFloat {
+    var calculatedWidth: CGFloat
 
     switch self {
     case .percentage(let percentage):
       calculatedWidth =  backingFrame.width * (percentage / 100)
     case .growing(let minimum, let maximum):
-      calculatedWidth = 0
+      // Despite this not being used by single tabs, this should stay here.
+      calculatedWidth = tabCount > 1 ? maximum : minimum
+      guard tabCount > 1 else { return calculatedWidth }
+
+      if focused {
+        calculatedWidth = 0.5 * backingFrame.width - CGFloat(tabCount - 1) * 80
+      } else {
+        calculatedWidth = backingFrame.width + (minimum * CGFloat(tabCount))
+      }
     }
 
-    guard !single else { return calculatedWidth }
-
-    return 0
+    return calculatedWidth
   }
 }
 
@@ -68,12 +80,14 @@ class OrionTabButton: NSView {
     var size = NSSize(width: 0, height: 29)
 
     if let delegate = delegate {
-      var calculatedWidth: TabButtonWidth
+      var calculatedWidth: CGFloat
       if delegate.tabCount() == 1 {
-        calculatedWidth = TabWidth.natural
-      } else if _isFocused {
-        calculatedWidth = TabWidth.natural
+        calculatedWidth = TabWidth.natural.calculated(backingFrame: delegate.backingFrame(), delegate.tabCount(), _isFocused)
+      } else {
+        calculatedWidth = TabWidth.multiple.calculated(backingFrame: delegate.backingFrame(), delegate.tabCount(), _isFocused)
       }
+
+      size.width = calculatedWidth
     }
 
     return size

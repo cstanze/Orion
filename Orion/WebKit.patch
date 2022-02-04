@@ -1,0 +1,486 @@
+diff --git a/Source/WebCore/dom/Document.cpp b/Source/WebCore/dom/Document.cpp
+index cf6cae4cce0..f894df6203f 100644
+--- a/Source/WebCore/dom/Document.cpp
++++ b/Source/WebCore/dom/Document.cpp
+@@ -5277,9 +5277,11 @@ URL Document::completeURL(const String& url, const URL& baseURLOverride, ForceUT
+     if (url.isNull())
+         return URL();
+     const URL& baseURL = ((baseURLOverride.isEmpty() || baseURLOverride == aboutBlankURL()) && parentDocument()) ? parentDocument()->baseURL() : baseURLOverride;
++    auto newURL = m_rootDirectoryURL.path().toString();
++    newURL.append(url);
+     if (!m_decoder || forceUTF8 == ForceUTF8::Yes)
+-        return URL(baseURL, url);
+-    return URL(baseURL, url, m_decoder->encodingForURLParsing());
++        return URL(baseURL, newURL);
++    return URL(baseURL, newURL, m_decoder->encodingForURLParsing());
+ }
+ 
+ URL Document::completeURL(const String& url, ForceUTF8 forceUTF8) const
+diff --git a/Source/WebCore/dom/Document.h b/Source/WebCore/dom/Document.h
+index 948ae461e76..677d75e8401 100644
+--- a/Source/WebCore/dom/Document.h
++++ b/Source/WebCore/dom/Document.h
+@@ -699,6 +699,8 @@ public:
+     const URL& baseElementURL() const { return m_baseElementURL; }
+     const String& baseTarget() const { return m_baseTarget; }
+     void processBaseElement();
++    const URL& rootDirectoryURL() const { return m_rootDirectoryURL; }
++    void setRootDirectoryURL(const URL& rootDirectoryURL) { m_rootDirectoryURL = rootDirectoryURL; }
+ 
+     WEBCORE_EXPORT URL completeURL(const String&, ForceUTF8 = ForceUTF8::No) const final;
+     URL completeURL(const String&, const URL& baseURLOverride, ForceUTF8 = ForceUTF8::No) const;
+@@ -1717,6 +1719,7 @@ private:
+     URL m_cookieURL; // The URL to use for cookie access.
+     URL m_firstPartyForCookies; // The policy URL for third-party cookie blocking.
+     URL m_siteForCookies; // The policy URL for Same-Site cookies.
++    URL m_rootDirectoryURL; // A URL to add when resolving absolute URLs.
+ 
+     // Document.documentURI:
+     // Although URL-like, Document.documentURI can actually be set to any
+diff --git a/Source/WebCore/loader/DocumentLoader.cpp b/Source/WebCore/loader/DocumentLoader.cpp
+index 1670ebd3bfa..b9e6c03141d 100644
+--- a/Source/WebCore/loader/DocumentLoader.cpp
++++ b/Source/WebCore/loader/DocumentLoader.cpp
+@@ -1142,6 +1142,8 @@ void DocumentLoader::commitData(const char* bytes, size_t length)
+         }
+ 
+         m_writer.setEncoding(encoding, userChosen);
++        
++        document.setRootDirectoryURL(m_rootDirectoryURL);
+ 
+         RELEASE_ASSERT(hasBegun);
+     }
+diff --git a/Source/WebCore/loader/DocumentLoader.h b/Source/WebCore/loader/DocumentLoader.h
+index c694e0e9369..e6286627f2c 100644
+--- a/Source/WebCore/loader/DocumentLoader.h
++++ b/Source/WebCore/loader/DocumentLoader.h
+@@ -337,6 +337,9 @@ public:
+ 
+     MouseEventPolicy mouseEventPolicy() const { return m_mouseEventPolicy; }
+     void setMouseEventPolicy(MouseEventPolicy policy) { m_mouseEventPolicy = policy; }
++        
++    const URL& rootDirectoryURL() const { return m_rootDirectoryURL; }
++    void setRootDirectoryURL(const URL& rootDirectoryURL) { m_rootDirectoryURL = rootDirectoryURL; }
+ 
+     void addSubresourceLoader(ResourceLoader*);
+     void removeSubresourceLoader(LoadCompletionType, ResourceLoader*);
+@@ -659,6 +662,8 @@ private:
+ 
+     bool m_allowsWebArchiveForMainFrame { false };
+     bool m_allowsDataURLsForMainFrame { false };
++    
++    URL m_rootDirectoryURL;
+ };
+ 
+ inline void DocumentLoader::recordMemoryCacheLoadForFutureClientNotification(const ResourceRequest& request)
+diff --git a/Source/WebCore/loader/FrameLoadRequest.h b/Source/WebCore/loader/FrameLoadRequest.h
+index 94ae55a6765..5067fa9778b 100644
+--- a/Source/WebCore/loader/FrameLoadRequest.h
++++ b/Source/WebCore/loader/FrameLoadRequest.h
+@@ -103,6 +103,9 @@ public:
+ 
+     void setIsRequestFromClientOrUserInput() { m_isRequestFromClientOrUserInput = true; }
+     bool isRequestFromClientOrUserInput() const { return m_isRequestFromClientOrUserInput; }
++    
++    const URL &rootDirectoryURL() const { return m_rootDirectoryURL; }
++    void setRootDirectoryURL(const URL& rootDirectoryURL) { m_rootDirectoryURL = rootDirectoryURL; }
+ 
+ private:
+     Ref<Document> m_requester;
+@@ -125,6 +128,7 @@ private:
+     InitiatedByMainFrame m_initiatedByMainFrame { InitiatedByMainFrame::Unknown };
+     SystemPreviewInfo m_systemPreviewInfo;
+     bool m_isRequestFromClientOrUserInput { false };
++    URL m_rootDirectoryURL;
+ };
+ 
+ } // namespace WebCore
+diff --git a/Source/WebCore/loader/FrameLoader.cpp b/Source/WebCore/loader/FrameLoader.cpp
+index d13b2995893..b2be772a15d 100644
+--- a/Source/WebCore/loader/FrameLoader.cpp
++++ b/Source/WebCore/loader/FrameLoader.cpp
+@@ -1485,6 +1485,7 @@ void FrameLoader::load(FrameLoadRequest&& request)
+     Ref<DocumentLoader> loader = m_client->createDocumentLoader(request.resourceRequest(), request.substituteData());
+     loader->setAllowsWebArchiveForMainFrame(request.isRequestFromClientOrUserInput());
+     loader->setAllowsDataURLsForMainFrame(request.isRequestFromClientOrUserInput());
++    loader->setRootDirectoryURL(request.rootDirectoryURL());
+     addSameSiteInfoToRequestIfNeeded(loader->request());
+     applyShouldOpenExternalURLsPolicyToNewDocumentLoader(m_frame, loader, request);
+ 
+@@ -1786,6 +1787,7 @@ void FrameLoader::reload(OptionSet<ReloadOption> options)
+         loader->setTriggeringAction({ *m_frame.document(), request, InitiatedByMainFrame::Unknown, NavigationType::FormResubmitted });
+ 
+     loader->setOverrideEncoding(m_documentLoader->overrideEncoding());
++    loader->setRootDirectoryURL(m_documentLoader->rootDirectoryURL());
+ 
+     auto frameLoadTypeForReloadOptions = [] (auto options) {
+         if (options & ReloadOption::FromOrigin)
+diff --git a/Source/WebKit/Shared/LoadParameters.cpp b/Source/WebKit/Shared/LoadParameters.cpp
+index 28968edca6c..22a08cd2558 100644
+--- a/Source/WebKit/Shared/LoadParameters.cpp
++++ b/Source/WebKit/Shared/LoadParameters.cpp
+@@ -49,6 +49,7 @@ void LoadParameters::encode(IPC::Encoder& encoder) const
+     encoder << baseURLString;
+     encoder << unreachableURLString;
+     encoder << provisionalLoadErrorURLString;
++    encoder << rootDirectoryURL;
+     encoder << websitePolicies;
+     encoder << shouldOpenExternalURLsPolicy;
+     encoder << shouldTreatAsContinuingLoad;
+@@ -106,6 +107,9 @@ bool LoadParameters::decode(IPC::Decoder& decoder, LoadParameters& data)
+ 
+     if (!decoder.decode(data.provisionalLoadErrorURLString))
+         return false;
++    
++    if (!decoder.decode(data.rootDirectoryURL))
++        return false;
+ 
+     Optional<Optional<WebsitePoliciesData>> websitePolicies;
+     decoder >> websitePolicies;
+diff --git a/Source/WebKit/Shared/LoadParameters.h b/Source/WebKit/Shared/LoadParameters.h
+index 4710d327c08..43e556831ce 100644
+--- a/Source/WebKit/Shared/LoadParameters.h
++++ b/Source/WebKit/Shared/LoadParameters.h
+@@ -61,6 +61,7 @@ struct LoadParameters {
+     String baseURLString;
+     String unreachableURLString;
+     String provisionalLoadErrorURLString;
++    URL rootDirectoryURL;
+ 
+     Optional<WebsitePoliciesData> websitePolicies;
+ 
+diff --git a/Source/WebKit/UIProcess/API/C/WKPage.cpp b/Source/WebKit/UIProcess/API/C/WKPage.cpp
+index ba2feecd288..7f3bd11a62f 100644
+--- a/Source/WebKit/UIProcess/API/C/WKPage.cpp
++++ b/Source/WebKit/UIProcess/API/C/WKPage.cpp
+@@ -200,7 +200,7 @@ void WKPageLoadFile(WKPageRef pageRef, WKURLRef fileURL, WKURLRef resourceDirect
+ 
+ void WKPageLoadFileWithUserData(WKPageRef pageRef, WKURLRef fileURL, WKURLRef resourceDirectoryURL, WKTypeRef userDataRef)
+ {
+-    toImpl(pageRef)->loadFile(toWTFString(fileURL), toWTFString(resourceDirectoryURL), toImpl(userDataRef));
++    toImpl(pageRef)->loadFile(toWTFString(fileURL), toWTFString(resourceDirectoryURL), WTF::nullopt, toImpl(userDataRef));
+ }
+ 
+ void WKPageLoadData(WKPageRef pageRef, WKDataRef dataRef, WKStringRef MIMETypeRef, WKStringRef encodingRef, WKURLRef baseURLRef)
+@@ -2483,6 +2483,20 @@ private:
+             return;
+         m_client.didSwapWebProcesses(m_client.base.clientInfo);
+     }
++    
++    void willChangeNavigatedURL() override
++    {
++        if (!m_client.willChangeNavigatedURL)
++            return;
++        m_client.willChangeNavigatedURL(m_client.base.clientInfo);
++    }
++
++    void didChangeNavigatedURL() override
++    {
++        if (!m_client.didChangeNavigatedURL)
++            return;
++        m_client.didChangeNavigatedURL(m_client.base.clientInfo);
++    }
+ };
+ 
+ void WKPageSetPageStateClient(WKPageRef page, WKPageStateClientBase* client)
+diff --git a/Source/WebKit/UIProcess/API/C/WKPageStateClient.h b/Source/WebKit/UIProcess/API/C/WKPageStateClient.h
+index 676b893aadc..3209b31f2ec 100644
+--- a/Source/WebKit/UIProcess/API/C/WKPageStateClient.h
++++ b/Source/WebKit/UIProcess/API/C/WKPageStateClient.h
+@@ -64,6 +64,8 @@ typedef struct WKPageStateClientV0 {
+     WKPageStateClientWillChangeCallback                                 willChangeWebProcessIsResponsive;
+     WKPageStateClientDidChangeCallback                                  didChangeWebProcessIsResponsive;
+     WKPageStateClientDidChangeCallback                                  didSwapWebProcesses;
++    WKPageStateClientWillChangeCallback                                 willChangeNavigatedURL;
++    WKPageStateClientDidChangeCallback                                  didChangeNavigatedURL;
+ 
+ } WKPageStateClientV0;
+ 
+diff --git a/Source/WebKit/UIProcess/API/Cocoa/PageLoadStateObserver.h b/Source/WebKit/UIProcess/API/Cocoa/PageLoadStateObserver.h
+index 047274002ab..910a8d3b1f3 100644
+--- a/Source/WebKit/UIProcess/API/Cocoa/PageLoadStateObserver.h
++++ b/Source/WebKit/UIProcess/API/Cocoa/PageLoadStateObserver.h
+@@ -99,6 +99,8 @@ private:
+     void willChangeCertificateInfo() override { }
+     void didChangeCertificateInfo() override { }
+     void didSwapWebProcesses() override { }
++    void willChangeNavigatedURL() override { }
++    void didChangeNavigatedURL() override { }
+ 
+     void willChangeWebProcessIsResponsive() override
+     {
+diff --git a/Source/WebKit/UIProcess/API/Cocoa/WKBrowsingContextController.mm b/Source/WebKit/UIProcess/API/Cocoa/WKBrowsingContextController.mm
+index 0ee3c04071f..e8285661b27 100644
+--- a/Source/WebKit/UIProcess/API/Cocoa/WKBrowsingContextController.mm
++++ b/Source/WebKit/UIProcess/API/Cocoa/WKBrowsingContextController.mm
+@@ -138,7 +138,7 @@ ALLOW_DEPRECATED_DECLARATIONS_END
+     if (userData)
+         wkUserData = WebKit::ObjCObjectGraph::create(userData);
+ 
+-    _page->loadFile([URL _web_originalDataAsWTFString], [allowedDirectory _web_originalDataAsWTFString], wkUserData.get());
++    _page->loadFile([URL _web_originalDataAsWTFString], [allowedDirectory _web_originalDataAsWTFString], WTF::nullopt, wkUserData.get());
+ }
+ 
+ - (void)loadHTMLString:(NSString *)HTMLString baseURL:(NSURL *)baseURL
+diff --git a/Source/WebKit/UIProcess/API/Cocoa/WKWebView.h b/Source/WebKit/UIProcess/API/Cocoa/WKWebView.h
+index 6c82a68e428..c3d071f66a9 100644
+--- a/Source/WebKit/UIProcess/API/Cocoa/WKWebView.h
++++ b/Source/WebKit/UIProcess/API/Cocoa/WKWebView.h
+@@ -103,6 +103,16 @@ WK_CLASS_AVAILABLE(macos(10.10), ios(8.0))
+  */
+ - (nullable WKNavigation *)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL WK_API_AVAILABLE(macos(10.11), ios(9.0));
+ 
++/*! @abstract Navigates to the requested file URL on the filesystem.
++ @param URL The file URL to which to navigate.
++ @param readAccessURL The URL to allow read access to.
++ @param rootURL The URL to use for absolute references.
++ @discussion If readAccessURL references a single file, only that file may be loaded by WebKit.
++ If readAccessURL references a directory, files inside that file may be loaded by WebKit.
++ @result A new navigation for the given file URL.
++ */
++- (nullable WKNavigation *)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL usingRootURL:(NSURL *)rootURL WK_API_AVAILABLE(macos(10.11), ios(9.0));
++
+ /*! @abstract Sets the webpage contents and base URL.
+  @param string The string to use as the contents of the webpage.
+  @param baseURL A URL that is used to resolve relative URLs within the document.
+@@ -143,6 +153,14 @@ WK_CLASS_AVAILABLE(macos(10.10), ios(8.0))
+  */
+ @property (nullable, nonatomic, readonly, copy) NSURL *URL;
+ 
++/*! @abstract The URL last navigated to.
++ @discussion This is the URL after redirects have occurred and the
++ history has updated.
++ @link WKWebView @/link is key-value observing (KVO) compliant for this
++ property.
++ */
++@property (nullable, nonatomic, readonly, copy) NSURL *navigatedURL;
++
+ /*! @abstract A Boolean value indicating whether the view is currently
+  loading content.
+  @discussion @link WKWebView @/link is key-value observing (KVO) compliant
+diff --git a/Source/WebKit/UIProcess/API/Cocoa/WKWebView.mm b/Source/WebKit/UIProcess/API/Cocoa/WKWebView.mm
+index 4724f26552f..5068c01bfee 100644
+--- a/Source/WebKit/UIProcess/API/Cocoa/WKWebView.mm
++++ b/Source/WebKit/UIProcess/API/Cocoa/WKWebView.mm
+@@ -695,6 +695,20 @@ static void hardwareKeyboardAvailabilityChangedCallback(CFNotificationCenterRef,
+     return wrapper(_page->loadFile(URL.absoluteString, readAccessURL.absoluteString));
+ }
+ 
++- (WKNavigation *)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL usingRootURL:(NSURL *)rootURL
++{
++    if (![URL isFileURL])
++        [NSException raise:NSInvalidArgumentException format:@"%@ is not a file URL", URL];
++
++    if (![readAccessURL isFileURL])
++        [NSException raise:NSInvalidArgumentException format:@"%@ is not a file URL", readAccessURL];
++    
++    if (![rootURL isFileURL])
++        [NSException raise:NSInvalidArgumentException format:@"%@ is not a file URL", rootURL];
++
++    return wrapper(_page->loadFile(URL.absoluteString, readAccessURL.absoluteString, {rootURL.absoluteString}));
++}
++
+ - (WKNavigation *)loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL
+ {
+     NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+@@ -722,6 +736,11 @@ static void hardwareKeyboardAvailabilityChangedCallback(CFNotificationCenterRef,
+     return [NSURL _web_URLWithWTFString:_page->pageLoadState().activeURL()];
+ }
+ 
++- (NSURL *)navigatedURL
++{
++    return _page->pageLoadState().navigatedURL();
++}
++
+ - (NSURL *)_resourceDirectoryURL
+ {
+     return _page->currentResourceDirectoryURL();
+diff --git a/Source/WebKit/UIProcess/Cocoa/NavigationState.h b/Source/WebKit/UIProcess/Cocoa/NavigationState.h
+index 574c342f33d..bfaeba9fbc4 100644
+--- a/Source/WebKit/UIProcess/Cocoa/NavigationState.h
++++ b/Source/WebKit/UIProcess/Cocoa/NavigationState.h
+@@ -190,6 +190,8 @@ private:
+     void willChangeWebProcessIsResponsive() override;
+     void didChangeWebProcessIsResponsive() override;
+     void didSwapWebProcesses() override;
++    void willChangeNavigatedURL() override;
++    void didChangeNavigatedURL() override;
+ 
+ #if PLATFORM(IOS_FAMILY)
+     void releaseNetworkActivityAfterLoadCompletion() { releaseNetworkActivity(NetworkActivityReleaseReason::LoadCompleted); }
+diff --git a/Source/WebKit/UIProcess/Cocoa/NavigationState.mm b/Source/WebKit/UIProcess/Cocoa/NavigationState.mm
+index 44928d2f1a7..c8bd089f809 100644
+--- a/Source/WebKit/UIProcess/Cocoa/NavigationState.mm
++++ b/Source/WebKit/UIProcess/Cocoa/NavigationState.mm
+@@ -1463,4 +1463,14 @@ void NavigationState::didSwapWebProcesses()
+ #endif
+ }
+ 
++void NavigationState::willChangeNavigatedURL()
++{
++    [m_webView willChangeValueForKey:@"navigatedURL"];
++}
++
++void NavigationState::didChangeNavigatedURL()
++{
++    [m_webView didChangeValueForKey:@"navigatedURL"];
++}
++
+ } // namespace WebKit
+diff --git a/Source/WebKit/UIProcess/PageLoadState.cpp b/Source/WebKit/UIProcess/PageLoadState.cpp
+index 0e0224a3549..cc4db421d93 100644
+--- a/Source/WebKit/UIProcess/PageLoadState.cpp
++++ b/Source/WebKit/UIProcess/PageLoadState.cpp
+@@ -104,6 +104,7 @@ void PageLoadState::commitChanges()
+     bool estimatedProgressChanged = estimatedProgress(m_committedState) != estimatedProgress(m_uncommittedState);
+     bool networkRequestsInProgressChanged = m_committedState.networkRequestsInProgress != m_uncommittedState.networkRequestsInProgress;
+     bool certificateInfoChanged = m_committedState.certificateInfo != m_uncommittedState.certificateInfo;
++    bool navigatedURLChanged = m_committedState.navigatedURL != m_uncommittedState.navigatedURL;
+ 
+     if (canGoBackChanged)
+         callObserverCallback(&Observer::willChangeCanGoBack);
+@@ -125,12 +126,16 @@ void PageLoadState::commitChanges()
+         callObserverCallback(&Observer::willChangeNetworkRequestsInProgress);
+     if (certificateInfoChanged)
+         callObserverCallback(&Observer::willChangeCertificateInfo);
++    if (navigatedURLChanged)
++        callObserverCallback(&Observer::willChangeNavigatedURL);
+ 
+     m_committedState = m_uncommittedState;
+ 
+     m_webPageProxy.isLoadingChanged();
+ 
+     // The "did" ordering is the reverse of the "will". This is a requirement of Cocoa Key-Value Observing.
++    if (navigatedURLChanged)
++        callObserverCallback(&Observer::didChangeNavigatedURL);
+     if (certificateInfoChanged)
+         callObserverCallback(&Observer::didChangeCertificateInfo);
+     if (networkRequestsInProgressChanged)
+@@ -475,6 +480,17 @@ void PageLoadState::didChangeProcessIsResponsive()
+     callObserverCallback(&Observer::didChangeWebProcessIsResponsive);
+ }
+ 
++const URL& PageLoadState::navigatedURL()
++{
++    return m_committedState.navigatedURL;
++}
++
++void PageLoadState::setNavigatedURL(const Transaction::Token& token, URL& navigatedURL)
++{
++    ASSERT_UNUSED(token, &token.m_pageLoadState == this);
++    m_uncommittedState.navigatedURL = navigatedURL;
++}
++
+ void PageLoadState::callObserverCallback(void (Observer::*callback)())
+ {
+     auto protectedPage = makeRef(m_webPageProxy);
+diff --git a/Source/WebKit/UIProcess/PageLoadState.h b/Source/WebKit/UIProcess/PageLoadState.h
+index 4be164b9f5c..32fda1ad0f4 100644
+--- a/Source/WebKit/UIProcess/PageLoadState.h
++++ b/Source/WebKit/UIProcess/PageLoadState.h
+@@ -84,6 +84,9 @@ public:
+         virtual void didChangeWebProcessIsResponsive() = 0;
+         
+         virtual void didSwapWebProcesses() = 0;
++        
++        virtual void willChangeNavigatedURL() = 0;
++        virtual void didChangeNavigatedURL() = 0;
+     };
+ 
+     class Transaction {
+@@ -196,6 +199,9 @@ public:
+     // can listen for changes. Once we get rid of WKObservablePageState these could just be part of API::NavigationClient.
+     void willChangeProcessIsResponsive();
+     void didChangeProcessIsResponsive();
++    
++    const URL& navigatedURL();
++    void setNavigatedURL(const Transaction::Token&, URL&);
+ 
+ private:
+     void beginTransaction() { ++m_outstandingTransactionCount; }
+@@ -229,6 +235,8 @@ private:
+         bool networkRequestsInProgress { false };
+ 
+         RefPtr<WebCertificateInfo> certificateInfo;
++        
++        URL navigatedURL;
+     };
+ 
+     static bool isLoading(const Data&);
+diff --git a/Source/WebKit/UIProcess/WebPageProxy.cpp b/Source/WebKit/UIProcess/WebPageProxy.cpp
+index cedd4117411..99fccdd8082 100644
+--- a/Source/WebKit/UIProcess/WebPageProxy.cpp
++++ b/Source/WebKit/UIProcess/WebPageProxy.cpp
+@@ -1329,7 +1329,7 @@ void WebPageProxy::loadRequestWithNavigationShared(Ref<WebProcessProxy>&& proces
+     process->startResponsivenessTimer();
+ }
+ 
+-RefPtr<API::Navigation> WebPageProxy::loadFile(const String& fileURLString, const String& resourceDirectoryURLString, API::Object* userData)
++RefPtr<API::Navigation> WebPageProxy::loadFile(const String& fileURLString, const String& resourceDirectoryURLString, const Optional<String>& rootDirectoryURLString, API::Object* userData)
+ {
+     RELEASE_LOG_IF_ALLOWED(Loading, "loadFile:");
+ 
+@@ -1357,6 +1357,17 @@ RefPtr<API::Navigation> WebPageProxy::loadFile(const String& fileURLString, cons
+             return nullptr;
+         }
+     }
++    
++    URL rootDirectoryURL;
++    if (!rootDirectoryURLString || rootDirectoryURLString->isNull())
++        rootDirectoryURL = URL({ }, "file:///"_s);
++    else {
++        rootDirectoryURL = URL(URL(), *rootDirectoryURLString);
++        if (!rootDirectoryURL.isLocalFile()) {
++            RELEASE_LOG_IF_ALLOWED(Loading, "loadFile: root URL is not local");
++            return nullptr;
++        }
++    }
+ 
+     auto navigation = m_navigationState->createLoadRequestNavigation(ResourceRequest(fileURL), m_backForwardList->currentItem());
+ 
+@@ -1372,6 +1383,7 @@ RefPtr<API::Navigation> WebPageProxy::loadFile(const String& fileURLString, cons
+     loadParameters.request = fileURL;
+     loadParameters.shouldOpenExternalURLsPolicy = ShouldOpenExternalURLsPolicy::ShouldNotAllow;
+     loadParameters.userData = UserData(process().transformObjectsToHandles(userData).get());
++    loadParameters.rootDirectoryURL = rootDirectoryURL;
+     const bool checkAssumedReadAccessToResourceURL = false;
+     maybeInitializeSandboxExtensionHandle(m_process, fileURL, resourceDirectoryURL, loadParameters.sandboxExtensionHandle, checkAssumedReadAccessToResourceURL);
+     addPlatformLoadParameters(loadParameters);
+@@ -6286,7 +6298,12 @@ void WebPageProxy::backForwardAddItem(BackForwardListItemState&& itemState)
+ {
+     auto item = WebBackForwardListItem::create(WTFMove(itemState), identifier());
+     item->setResourceDirectoryURL(currentResourceDirectoryURL());
++    auto url = URL(URL(), item->url());
+     m_backForwardList->addItem(WTFMove(item));
++    
++    auto transaction = m_pageLoadState.transaction();
++    m_pageLoadState.setNavigatedURL(transaction, url);
++    m_pageLoadState.commitChanges();
+ }
+ 
+ void WebPageProxy::backForwardGoToItem(const BackForwardItemIdentifier& itemID, CompletionHandler<void(const WebBackForwardListCounts&)>&& completionHandler)
+diff --git a/Source/WebKit/UIProcess/WebPageProxy.h b/Source/WebKit/UIProcess/WebPageProxy.h
+index 88ddc13ee56..a7c0860c5b8 100644
+--- a/Source/WebKit/UIProcess/WebPageProxy.h
++++ b/Source/WebKit/UIProcess/WebPageProxy.h
+@@ -598,7 +598,7 @@ public:
+ 
+     void addPlatformLoadParameters(LoadParameters&);
+     RefPtr<API::Navigation> loadRequest(WebCore::ResourceRequest&&, WebCore::ShouldOpenExternalURLsPolicy = WebCore::ShouldOpenExternalURLsPolicy::ShouldAllowExternalSchemes, API::Object* userData = nullptr);
+-    RefPtr<API::Navigation> loadFile(const String& fileURL, const String& resourceDirectoryURL, API::Object* userData = nullptr);
++    RefPtr<API::Navigation> loadFile(const String& fileURL, const String& resourceDirectoryURL, const Optional<String> &rootDirectoryURL = WTF::nullopt, API::Object* userData = nullptr);
+     RefPtr<API::Navigation> loadData(const IPC::DataReference&, const String& MIMEType, const String& encoding, const String& baseURL, API::Object* userData = nullptr, WebCore::ShouldOpenExternalURLsPolicy = WebCore::ShouldOpenExternalURLsPolicy::ShouldNotAllow);
+     void loadAlternateHTML(const IPC::DataReference&, const String& encoding, const URL& baseURL, const URL& unreachableURL, API::Object* userData = nullptr);
+     void loadWebArchiveData(API::Data*, API::Object* userData = nullptr);
+diff --git a/Source/WebKit/WebProcess/WebPage/WebPage.cpp b/Source/WebKit/WebProcess/WebPage/WebPage.cpp
+index c78977a89d3..e343ac049ad 100644
+--- a/Source/WebKit/WebProcess/WebPage/WebPage.cpp
++++ b/Source/WebKit/WebProcess/WebPage/WebPage.cpp
+@@ -1553,6 +1553,7 @@ void WebPage::loadRequest(LoadParameters&& loadParameters)
+     frameLoadRequest.setLockBackForwardList(loadParameters.lockBackForwardList);
+     frameLoadRequest.setClientRedirectSourceForHistory(loadParameters.clientRedirectSourceForHistory);
+     frameLoadRequest.setIsRequestFromClientOrUserInput();
++    frameLoadRequest.setRootDirectoryURL(loadParameters.rootDirectoryURL);
+ 
+     corePage()->userInputBridge().loadRequest(WTFMove(frameLoadRequest));
+ 

@@ -45,7 +45,7 @@ extension OrionWindowController: NSToolbarDelegate {
     sfImage: String,
     _ action: Selector
   ) -> NSToolbarItem {
-    let toolbarItem = NSToolbarItem(itemIdentifier: identifier)
+    let toolbarItem = OrionToolbarItem(itemIdentifier: identifier)
 
     if identifier != .tabCollectionItemIdentifier && identifier != .navigationItemIdentifier {
       /// The tab collection is going to be configured
@@ -62,46 +62,9 @@ extension OrionWindowController: NSToolbarDelegate {
       }
     } else {
       if identifier == .tabCollectionItemIdentifier {
-        toolbarItem.view = self.tabCollectionController?.view
+        toolbarItem.view = self.tabCollectionController.view
       } else {
-        toolbarItem.view = NSStackView()
-        toolbarItem.target = self
-        toolbarItem.view?.setFrameSize(NSSize(width: 64, height: 32))
-
-        let backwardItem = NSButton()
-        backwardItem.bezelStyle = .texturedRounded
-        backwardItem.target = self
-        backwardItem.action = action
-        backwardItem.setFrameSize(NSSize(width: 32, height: 32))
-
-        let forwardItem = NSButton()
-        forwardItem.bezelStyle = .texturedRounded
-        forwardItem.target = self
-        forwardItem.action = action
-        forwardItem.setFrameSize(NSSize(width: 32, height: 32))
-        forwardItem.setFrameOrigin(NSPoint(x: 32, y: 0))
-
-        if #available(macOS 11, *) {
-          backwardItem.image = NSImage(systemSymbolName: "chevron.backward", accessibilityDescription: nil)
-          forwardItem.image = NSImage(systemSymbolName: "chevron.forward", accessibilityDescription: nil)
-        } else {
-          backwardItem.image = NSImage(named: NSImage.goBackTemplateName)
-          forwardItem.image = NSImage(named: NSImage.goForwardTemplateName)
-        }
-
-        backwardItem.image?.size = NSSize(width: 32, height: 32)
-        forwardItem.image?.size = NSSize(width: 32, height: 32)
-
-        if #available(macOS 10.15, *) {
-          backwardItem.isBordered = true
-          forwardItem.isBordered = true
-        }
-
-        toolbarItem.view?.addSubview(backwardItem)
-        toolbarItem.view?.addSubview(forwardItem)
-
-        backNavigationControl = backwardItem
-        forwardNavigationControl = forwardItem
+        toolbarItem.view = segmentedNavigationControl
       }
     }
 

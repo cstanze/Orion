@@ -16,7 +16,7 @@ extension OrionWindowController: WKNavigationDelegate {
     guard webView.url!.absoluteString != "about:blank" else { return } // This also happened... now it doesn't
 
     OrionHistoryManager.writeEntryIntoHistory(withTitle: webView.title!, url: webView.url!)
-    NotificationCenter.default.post(name: .OrionCurrentTabLocationChanged, object: webView.url!)
+    NotificationCenter.default.post(name: .TabLocationChanged, object: webView.url!)
   }
 
   func webView(
@@ -27,14 +27,14 @@ extension OrionWindowController: WKNavigationDelegate {
     if let webViewUrl = navigationAction.request.url {
       if let components = URLComponents(url: webViewUrl, resolvingAgainstBaseURL: false) {
         if components.host == "addons.mozilla.org" {
-          webView.customUserAgent = mainViewController?.firefoxUA
+          webView.customUserAgent = mainViewController.firefoxUA
         } else if components.host == "addons.cdn.mozilla.net" {
           decisionHandler(.cancel)
           print("Cancelled, downloading extension")
-          (NSApp.delegate as? AppDelegate)!.extensionManager.downloadExtension(withUrl: webView.url!)
+          OrionExtensionManager.shared.downloadExtension(withUrl: webView.url!)
           return
         } else {
-          webView.customUserAgent = mainViewController?.safariUA
+          webView.customUserAgent = mainViewController.safariUA
         }
       }
     }

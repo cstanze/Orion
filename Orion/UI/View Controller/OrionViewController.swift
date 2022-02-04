@@ -45,7 +45,7 @@ class OrionViewController: NSViewController {
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(tabLocationChanged),
-      name: NSNotification.Name.OrionCurrentTabLocationChangedViaUser,
+      name: NSNotification.Name.UserChangedTabLocation,
       object: nil
     )
   }
@@ -56,7 +56,11 @@ class OrionViewController: NSViewController {
     if let obj = notification.object as? String {
       var request: URLRequest?
       if obj.isValidURL {
-        request = URLRequest(url: URL(string: obj)!)
+        var url = URL(string: obj)!
+        if url.scheme == nil {
+          url = URL(string: "http://\(url.absoluteString)")!
+        }
+        request = URLRequest(url: url)
       } else {
         // Implement Kagi Search support ;)
         var components = URLComponents()

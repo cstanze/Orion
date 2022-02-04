@@ -9,7 +9,7 @@ import Foundation
 import Cocoa
 
 extension NSNotification.Name {
-  static let OrionControllerWebViewChanged = NSNotification.Name("OrionControllerWebViewChanged")
-  static let OrionCurrentTabLocationChangedViaUser = NSNotification.Name("OrionCurrentTabLocationChangedViaUser")
-  static let OrionCurrentTabLocationChanged = NSNotification.Name("OrionCurrentTabLocationChanged")
+  static let WebViewChanged = NSNotification.Name("OrionControllerWebViewChanged")
+  static let UserChangedTabLocation = NSNotification.Name("OrionCurrentTabLocationChangedViaUser")
+  static let TabLocationChanged = NSNotification.Name("OrionCurrentTabLocationChanged")
 }

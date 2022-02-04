@@ -5,6 +5,12 @@
 //  Created by Jules Amalie on 2021/12/31.
 //
 
+/*
+ * IMPORTANT
+ * ---------
+ * This code is currently unused and considered "dead code". Refrain from using this code. It sucks anyways...
+ */
+
 import Cocoa
 
 /// Just a nice enum so that we don't just use boolean
@@ -45,7 +51,7 @@ class OrionTabSearchField: NSTextField {
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(locationDidChange),
-      name: .OrionCurrentTabLocationChanged,
+      name: .TabLocationChanged,
       object: nil
     )
   }
@@ -71,7 +77,8 @@ class OrionTabSearchField: NSTextField {
 
 //    if let tabDelegate = tabDelegate {
 //      if tabDelegate.tabCount() == 1 {
-//        self.priorityWidthConstraint = self.widthAnchor.constraint(equalTo: window!.contentView!.widthAnchor, multiplier: 0.625)
+//        self.priorityWidthConstraint =
+//          self.widthAnchor.constraint(equalTo: window!.contentView!.widthAnchor, multiplier: 0.625)
 //      } else {
 //        self.priorityWidthConstraint = self.widthAnchor.constraint(greaterThanOrEqualToConstant: 50)
 //      }
@@ -101,7 +108,7 @@ class OrionTabSearchField: NSTextField {
 
     guard self.stringValue != lastStringValue else { return }
 
-    NotificationCenter.default.post(name: .OrionCurrentTabLocationChangedViaUser, object: self.stringValue)
+    NotificationCenter.default.post(name: .UserChangedTabLocation, object: self.stringValue)
     lastStringValue = self.stringValue
 //    self.currentEditor()?.selectedRange = NSMakeRange(0, 0)
     window?.makeFirstResponder(nil)

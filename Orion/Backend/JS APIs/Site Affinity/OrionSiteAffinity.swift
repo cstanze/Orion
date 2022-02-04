@@ -9,6 +9,7 @@ import Foundation
 
 /// Handles all the affinity stuff (fetching, saving, mutation, etc.)
 class OrionSiteAffinityManager {
+  static let shared = OrionSiteAffinityManager()
 
   var siteAffinities: [OrionSiteAffinityRepresentable] = []
 
@@ -24,6 +25,8 @@ class OrionSiteAffinityManager {
     }
 
     /**
+     * Tree of historical entries mapped from domain to entries
+     *
      * The structure for this is quite easy:
      *
      * domain:
@@ -40,7 +43,7 @@ class OrionSiteAffinityManager {
     var entryTree: [String: [OrionHistoryEntry]] = [:]
     for entry in historyEntries! {
       let components = URLComponents(string: entry.url)
-      guard components != nil else { continue } /// Yes, this has failed before...  I have no idea why
+      guard components != nil else { continue } // Yes, this has failed before...  I have no idea why
 
       if entryTree.keys.contains(components!.host!) {
         entryTree[components!.host!] = []
@@ -62,14 +65,15 @@ class OrionSiteAffinityManager {
             OrionPageAffinityRepresentable(title: page.title, url: page.url, affinity: 1)
         } else {
           // Yikes... the unwrap pyramid of doom.
+          // ...or flattened pyramid of doom?
           visitedPages[components!.host!]!.affinity += 1
         }
       }
 
       siteAffinities.append(OrionSiteAffinityRepresentable(
         domain: key,
-        /// The keys were only needed for mapping purposes,
-        /// now we can use
+        // The keys were only needed for mapping purposes,
+        // now we can use the values
         visitedPages: Array(visitedPages.values),
         affinity: entryTree[key]!.count
       ))
@@ -77,6 +81,8 @@ class OrionSiteAffinityManager {
   }
 
   /**
+   * Compiles topSites using a simple algorithm
+   *
    * It's best to go over the algorithm used here despite it being very simple.
    *
    * Since the `topSites` API (without any options) gives us a list of sites
